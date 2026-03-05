@@ -82,7 +82,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "mega_mcp_server"
+name = "mega-mcp-server"
 version = "0.1.0"
 dependencies = [
  "serde",

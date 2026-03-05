@@ -1,10 +1,13 @@
 [package]
-name = "mega_mcp_server"
+name = "mega-mcp-server"
 version = "0.1.0"
 edition = "2024"
-description = "MCP server for MEGA cloud storage -- 20 tools via MEGAcmd CLI"
 license = "MIT"
 authors = ["Purple Squirrel Media LLC"]
+
+[[bin]]
+name = "mega-mcp-server"
+path = "src/main.rs"
 
 [dependencies]
 tokio = { version = "1", features = ["full"] }
