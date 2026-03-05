@@ -1,80 +1,75 @@
-# MEGA Cloud Storage MCP Server
+# mega-mcp-server
 
-MCP server for MEGA cloud storage integration with Claude Code. Provides comprehensive file management, synchronization, and sharing capabilities using MEGAcmd.
+[\![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[\![MCP](https://img.shields.io/badge/MCP-Compatible-blue.svg)](https://modelcontextprotocol.io)
+[\![TypeScript](https://img.shields.io/badge/TypeScript-5.x-blue.svg)](https://www.typescriptlang.org)
 
-## Features
+MCP server for MEGA encrypted cloud storage. Provides file management, uploads, downloads, sharing, folder sync, and search via MEGAcmd.
 
-- **File Management** - List, copy, move, delete files and folders
-- **Upload/Download** - Transfer files between local and cloud
-- **Sharing** - Create public links and share with other users
-- **Sync** - Set up folder synchronization
-- **Storage Info** - View usage and quotas
+## Tools (18 total)
 
-## Available Tools (18 total)
+### Account and Navigation
 
-### Account & Navigation
 | Tool | Description |
 |------|-------------|
 | `mega_whoami` | Get current logged-in account info |
 | `mega_pwd` | Print current working directory |
 | `mega_cd` | Change current directory |
 | `mega_df` | Show storage space usage |
-| `mega_du` | Show disk usage of remote path |
+| `mega_du` | Show disk usage of a remote path |
 
 ### File Operations
+
 | Tool | Description |
 |------|-------------|
-| `mega_ls` | List files and folders |
-| `mega_mkdir` | Create a directory |
+| `mega_ls` | List files and folders (supports -l and -R) |
+| `mega_mkdir` | Create a directory (supports -p) |
 | `mega_rm` | Remove files or folders |
-| `mega_mv` | Move or rename files/folders |
-| `mega_cp` | Copy files/folders |
+| `mega_mv` | Move or rename files and folders |
+| `mega_cp` | Copy files and folders |
 | `mega_cat` | Display contents of a remote file |
 | `mega_tree` | Show directory tree structure |
-| `mega_find` | Search for files/folders |
+| `mega_find` | Search for files with wildcard patterns |
 
 ### Transfer
+
 | Tool | Description |
 |------|-------------|
 | `mega_get` | Download files to local filesystem |
 | `mega_put` | Upload files to MEGA cloud |
-| `mega_transfers` | Show current transfers |
-| `mega_sync` | Set up folder synchronization |
+| `mega_transfers` | Show current upload/download progress |
+| `mega_sync` | Set up bidirectional folder sync |
 
 ### Sharing
+
 | Tool | Description |
 |------|-------------|
-| `mega_export` | Create a public link |
-| `mega_share` | Share folder with another user |
-| `mega_import` | Import a public MEGA link |
+| `mega_export` | Create a public link (with optional expiry and password) |
+| `mega_share` | Share a folder with another MEGA user (r/rw/full) |
+| `mega_import` | Import a public MEGA link to your account |
 
-## Setup
+## Prerequisites
 
-### 1. Prerequisites
+Install MEGAcmd:
 
-Install MEGAcmd from https://mega.io/cmd
-
-On macOS:
 ```bash
 brew install --cask megacmd
 ```
 
-Login to your MEGA account:
+Log in to your MEGA account:
+
 ```bash
 mega-login your@email.com password
 ```
 
-### 2. Install Dependencies
+## Install
 
 ```bash
-cd ~/mcp-servers/mega-mcp
 npm install
 npm run build
 ```
 
-### 3. Add to Claude Code
-
-Add to `~/.claude.json`:
+## Configuration
 
 ```json
 {
@@ -82,119 +77,24 @@ Add to `~/.claude.json`:
     "mega": {
       "type": "stdio",
       "command": "node",
-      "args": ["/Users/matthewkarsten/mcp-servers/mega-mcp/dist/index.js"]
+      "args": ["/path/to/mega-mcp/dist/index.js"]
     }
   }
 }
 ```
 
-## Architecture
-
-```
-Claude Code (Opus 4.5)
-         │
-         └──▶ MEGA MCP Server
-                    │
-                    └──▶ MEGAcmd CLI
-                              │
-                              └──▶ MEGA Cloud Storage
-                                        │
-                                        ├── 20 GB Free Storage
-                                        ├── End-to-End Encryption
-                                        ├── File Versioning
-                                        └── Sharing & Sync
-```
-
 ## MEGA Features
 
-- **End-to-End Encryption** - All files encrypted client-side
-- **20 GB Free Storage** - Free tier included
-- **File Versioning** - Automatic version history
-- **Cross-Platform Sync** - Desktop and mobile apps
-- **Public Links** - Share files with anyone
-- **Folder Sharing** - Collaborate with other MEGA users
-
-## Usage Examples
-
-```
-User: Show my MEGA storage usage
-
-Claude: [Uses mega_df tool]
-Result:
-Account: purplesquirrelmedia@icloud.com
-Used: 2.3 GB of 20 GB (11.5%)
-Available: 17.7 GB
-
-User: List files in my Documents folder
-
-Claude: [Uses mega_ls tool with path=/Documents]
-Result:
-- project-files/
-- presentations/
-- backup.zip (156 MB)
-- notes.txt (2.3 KB)
-
-User: Create a public link for backup.zip
-
-Claude: [Uses mega_export tool]
-Result: https://mega.nz/file/xxxxx#yyyyy
-```
-
-## Transfer Features
-
-### Upload
-```
-User: Upload ~/reports/ to MEGA
-
-Claude: [Uses mega_put tool]
-Uploading 15 files...
-Completed: ~/reports/ -> /reports/
-```
-
-### Download
-```
-User: Download /Documents/backup.zip
-
-Claude: [Uses mega_get tool]
-Downloaded: /Documents/backup.zip -> ~/Downloads/backup.zip
-```
-
-### Sync
-```
-User: Set up sync between ~/Projects and /Projects
-
-Claude: [Uses mega_sync tool]
-Sync established: ~/Projects <-> /Projects
-```
-
-## Files
-
-```
-mega-mcp/
-├── src/
-│   └── index.ts    # MCP server implementation
-├── dist/           # Compiled JavaScript
-├── package.json
-├── tsconfig.json
-└── README.md
-```
+- **End-to-end encryption** -- all files encrypted client-side with zero-knowledge architecture
+- **20 GB free storage** -- included with every account
+- **File versioning** -- automatic version history
+- **Cross-platform sync** -- desktop and mobile clients
 
 ## Dependencies
 
-- `@modelcontextprotocol/sdk` - MCP SDK
-- MEGAcmd - MEGA command-line client
-
-## Security
-
-- All data encrypted with your account key
-- Zero-knowledge encryption (MEGA can't read your files)
-- Two-factor authentication supported
-- Session-based authentication via MEGAcmd
-
-## Author
-
-Matthew Karsten
+- `@modelcontextprotocol/sdk` -- MCP protocol SDK
+- MEGAcmd -- MEGA command-line client (must be installed separately)
 
 ## License
 
-MIT
+[MIT](LICENSE)
